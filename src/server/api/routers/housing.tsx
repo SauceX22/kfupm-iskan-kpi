@@ -8,7 +8,7 @@ import {
 
 
 export const housingRouter = createTRPCRouter({
-    allHousingUnits: protectedProcedure
+    allHousingUnits: publicProcedure
         .query(({ input, ctx }) => {
             const allUnits = ctx.prisma.houseUnitStatus.findMany({});
             return allUnits;
