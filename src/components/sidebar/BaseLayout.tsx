@@ -3,9 +3,9 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { SideNav, SideNavButton, SideNavLink, SideNavLinks } from "./SideNav";
-import { ClipboardList, FileSpreadsheet, Home, Users } from "lucide-react";
+import { Home, Users } from "lucide-react";
+import Image from "next/image";
 
-import { UserProfile } from './UserProfile';
 import { cn } from "~/lib/utils";
 
 type Props = {
@@ -41,8 +41,10 @@ const BaseLayout = ({ children, className, pageTitle, description }: Props) => {
 
       <div className="select-none">
         <SideNavButton onClick={handleToggle} />
-        <SideNav isOpen={isOpen} className="border">
-          {/* LOGO HERE */}
+        <SideNav isOpen={isOpen} className="border rounded-none">
+          <div className="flex justify-center items-center w-full py-4 px-2">
+            <Image src="/kfupm-logo-text-green-en.svg" alt="KFUPM Logo" width={300} height={20} />
+          </div>
           <SideNavLinks className="flex-grow px-2">
             <SideNavLink href="/home">
               <Home className="me-4 h-5 w-5" /> Home
