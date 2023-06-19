@@ -125,8 +125,8 @@ model HouseUnitStatus {
     daysLaterThanPlanned      Int?
 
     // Status
-    houseSubmissionStatus HouseSubmissionStatus @default(PENDING_MAINTENANCE)
-    comments              String?
+    submissionStatus HouseSubmissionStatus @default(PENDING_MAINTENANCE)
+    comments         String?
     // Flow: Maintenance -> Cleaning -> Furnishing -> Gardening -> Tenant Assignment
 }
 
