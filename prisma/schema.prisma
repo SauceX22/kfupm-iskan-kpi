@@ -70,16 +70,24 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
+enum HouseSatisfactionStatus {
+    NONE
+    SATISFIED
+    PARTIALLY_SATISFIED
+    UNSATISFIED
+}
+
 enum HouseSubmissionStatus {
-    EARLY_SUBMISSION
-    DONE_ON_TARGET
-    LATE_SUBMISSION
+    NOT_STARTED
     PENDING_MAINTENANCE
     PENDING_CLEANING
     PENDING_FURNISHING
     PENDING_GARDENING
     PENDING_FINAL_INSPECTION
     PENDING_TENANT_ASSIGNMENT
+    EARLY_SUBMISSION
+    DONE_ON_TARGET
+    LATE_SUBMISSION
 }
 
 model HouseUnitStatus {
@@ -94,39 +102,28 @@ model HouseUnitStatus {
     area       Float
 
     // Maintenance
-    dateSubmittedToMaintenance       DateTime?
-    dateReceivedByMaintenance        DateTime?
-    dateReceivedFromMaintenance      DateTime?
-    dateRequiredByPersonnel          DateTime? /// From Maintenance Dept.
-    // TODO dateExpectedMaintenanceCompletion DateTime? maybee??
+    dateSubmittedToMaintenance        DateTime?
+    dateReceivedByMaintenance         DateTime?
+    dateReceivedFromMaintenance       DateTime?
+    dateRequiredByPersonnel           DateTime? /// From Maintenance Dept.
     // Cleaning
-    dateSubmittedToCleaning          DateTime?
-    dateExpectedCleaningCompletion   DateTime?
-    dateCompletedCleaning            DateTime?
+    dateSubmittedToCleaning           DateTime?
+    dateExpectedCleaningCompletion    DateTime?
+    dateCompletedCleaning             DateTime?
     // Furnishing
-    dateSubmittedToFurnishing        DateTime?
-    dateExpectedFurnishingCompletion DateTime?
-    dateCompletedFurnishing          DateTime?
+    dateSubmittedToFurnishing         DateTime?
+    dateExpectedFurnishingCompletion  DateTime?
+    dateCompletedFurnishing           DateTime?
     // Gardening
-    dateSubmittedToGardening         DateTime?
-    dateExpectedGardeningCompletion  DateTime?
-    dateCompletedGardening           DateTime?
+    dateSubmittedToGardening          DateTime?
+    dateExpectedGardeningCompletion   DateTime?
+    dateCompletedGardening            DateTime?
     // Tenant (instructor)
-    // TODO: is the date of final inspection the same as the date of tenant assignment?
-    dateCheckedAndSubmitedToTenant   DateTime?
-    dateTenantSurveyFilled           DateTime?
-
-    // Days
-    daysToCompleteCleaning    Int?
-    daysToCompleteFurnishing  Int?
-    daysToCompleteGardening   Int?
-    totalDaysToCompleteAll    Int?
-    totalDaysToSubmitToTenant Int?
-    daysLaterThanPlanned      Int?
-
+    dateCheckedAndSubmitedToCommittee DateTime?
     // Status
-    submissionStatus HouseSubmissionStatus @default(PENDING_MAINTENANCE)
-    comments         String?
+    submissionStatus                  HouseSubmissionStatus   @default(PENDING_MAINTENANCE)
+    satisfactionStatus                HouseSatisfactionStatus @default(NONE)
+    comment                           String?
     // Flow: Maintenance -> Cleaning -> Furnishing -> Gardening -> Tenant Assignment
 }
 
