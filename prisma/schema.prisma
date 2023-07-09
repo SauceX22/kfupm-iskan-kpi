@@ -7,13 +7,12 @@ generator client {
 }
 
 datasource db {
-    provider     = "mysql"
+    provider = "postgresql"
     // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
     // Further reading:
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
     // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url          = env("DATABASE_URL")
-    relationMode = "prisma"
+    url      = env("DATABASE_URL")
 }
 
 model Example {
@@ -90,7 +89,7 @@ enum HouseSubmissionStatus {
     LATE_SUBMISSION
 }
 
-model HouseUnitStatus {
+model HouseUnit {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -98,8 +97,8 @@ model HouseUnitStatus {
     unitNumber Int     @unique
     court      String
     bedrooms   Int
-    extended   Boolean
-    area       Float
+    extended   Boolean @default(false)
+    area       Float   @default(0)
 
     // Maintenance
     dateSubmittedToMaintenance        DateTime?
@@ -124,7 +123,9 @@ model HouseUnitStatus {
     submissionStatus                  HouseSubmissionStatus   @default(PENDING_MAINTENANCE)
     satisfactionStatus                HouseSatisfactionStatus @default(NONE)
     comment                           String?
+
     // Flow: Maintenance -> Cleaning -> Furnishing -> Gardening -> Tenant Assignment
+    @@map("HouseUnitStatus")
 }
 
 // TODO satisfaction survey results
