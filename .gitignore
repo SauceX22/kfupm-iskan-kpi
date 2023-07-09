@@ -43,3 +43,4 @@ yarn-error.log*
 
 .vscode
 sample-files
+prisma/seed-data.json
