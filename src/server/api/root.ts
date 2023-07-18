@@ -1,4 +1,4 @@
-import { housingRouter } from "~/server/api/routers/housing";
+import { houseRouter } from "~/server/api/routers/house-unit";
 import { createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -7,7 +7,7 @@ import { createTRPCRouter } from "~/server/api/trpc";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  housing: housingRouter,
+  housing: houseRouter,
 });
 
 // export type definition of API
