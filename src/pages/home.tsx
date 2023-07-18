@@ -24,7 +24,7 @@ import { HouseSubmissionStatusText } from "~/components/HouseUnitStatus";
 const Home: NextPage = (props) => {
 
   return (
-    <BaseLayout pageTitle="home-page">
+    <BaseLayout pageTitle="Home">
       <HousingUnitsLatest />
     </BaseLayout>
   );
