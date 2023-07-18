@@ -1,17 +1,36 @@
 import { z } from "zod";
+import { processDays } from '~/utils/housing-days';
 
 import {
     createTRPCRouter,
     publicProcedure,
-    protectedProcedure
 } from "~/server/api/trpc";
 
 
 export const houseRouter = createTRPCRouter({
-    allHouseUnits: publicProcedure
-        .query(({ input, ctx }) => {
-            const allUnits = ctx.prisma.houseUnit.findMany({});
-            return allUnits;
+    getHouseUnit: publicProcedure
+        .input(z.object({
+            id: z.string()
+        }))
+        .query(async ({ input, ctx }) => {
+            const unit = await ctx.prisma.houseUnit.findUniqueOrThrow({
+                where: {
+                    id: input.id
+                }
+            });
+            return processDays(unit);
+        }),
+    getHouseUnits: publicProcedure
+        .input(z.object({
+            limit: z.number().optional(),
+            skip: z.number().optional(),
+        }))
+        .query(async ({ input, ctx }) => {
+            const allUnits = await ctx.prisma.houseUnit.findMany({
+                take: input.limit,
+                skip: input.skip
+            });
+            return processDays(allUnits);
         }),
     importExcelFileData: publicProcedure
         .input(z.object({
@@ -43,8 +62,8 @@ export const houseRouter = createTRPCRouter({
                 comment: z.string().optional(),
             }))
         }))
-        .query(({ input, ctx }) => {
-            const allUnits = ctx.prisma.houseUnit.createMany({
+        .mutation(async ({ input, ctx }) => {
+            const allUnits = await ctx.prisma.houseUnit.createMany({
                 data: {
                     ...input.houseUnits
                 },
@@ -80,37 +99,25 @@ export const houseRouter = createTRPCRouter({
             dateCheckedAndSubmitedToTenant: z.date().optional(),
             dateTenantSurveyFilled: z.date().optional(),
         }))
-        .query(({ input, ctx }) => {
-            const updatedUnit = ctx.prisma.houseUnit.update({
+        .mutation(async ({ input, ctx }) => {
+            const updatedUnit = await ctx.prisma.houseUnit.update({
                 where: {
                     id: input.id
                 },
                 data: input
             });
-            return updatedUnit;
+            return processDays(updatedUnit);
         }),
     deleteHouseUnit: publicProcedure
         .input(z.object({
             id: z.string()
         }))
-        .query(({ input, ctx }) => {
-            const deletedUnit = ctx.prisma.houseUnit.delete({
+        .mutation(async ({ input, ctx }) => {
+            const deletedUnit = await ctx.prisma.houseUnit.delete({
                 where: {
                     id: input.id
                 }
             });
-            return deletedUnit;
-        }),
-    getHouseUnit: publicProcedure
-        .input(z.object({
-            id: z.string()
-        }))
-        .query(({ input, ctx }) => {
-            const unit = ctx.prisma.houseUnit.findUnique({
-                where: {
-                    id: input.id
-                }
-            });
-            return unit;
+            return processDays(deletedUnit);
         }),
 });

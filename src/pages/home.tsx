@@ -37,7 +37,7 @@ type HousingUnitsTableProps = {
 } & React.ComponentProps<typeof Card>;
 
 const HousingUnitsLatest = ({ className, ...props }: HousingUnitsTableProps) => {
-  const { data: housingUnits, isLoading, error } = api.housing.allHouseUnits.useQuery();
+  const { data: housingUnits, isLoading, error } = api.housing.getHouseUnits.useQuery({});
 
   if (isLoading) {
     return <div>Loading...</div>;

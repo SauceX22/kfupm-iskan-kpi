@@ -8,7 +8,9 @@ const getDayDifference = (date1: Date | null, date2: Date | null) => {
     return differenceInDays(date1, date2);
 }
 
-const processDays = (houses: HouseUnit[]) => {
+export const processDays = (houses: HouseUnit[] | HouseUnit) => {
+    // ensure houses is actually an array, or convert
+    houses = Array.isArray(houses) ? houses : [houses];
     const processingDays = houses.map((house) => {
         return {
             ...house,

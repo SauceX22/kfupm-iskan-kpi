@@ -36,7 +36,7 @@ type HousingUnitsTableProps = {
 } & React.ComponentProps<typeof Card>;
 
 const AllHousingUnits = ({ className, ...props }: HousingUnitsTableProps) => {
-  const { data: housingUnits, isLoading, error } = api.housing.allHouseUnits.useQuery(undefined, {
+  const { data: housingUnits, isLoading, error } = api.housing.getHouseUnits.useQuery({}, {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
