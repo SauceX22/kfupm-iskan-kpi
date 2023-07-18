@@ -5,7 +5,7 @@ import BaseLayout from "~/components/sidebar/BaseLayout";
 const DATA: NextPage = () => {
 
   return (
-    <BaseLayout pageTitle="all-data-page">
+    <BaseLayout pageTitle="Housing Data">
       <HousingUnitsTable />
     </BaseLayout>
   );
