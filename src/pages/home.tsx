@@ -1,5 +1,5 @@
 import { type NextPage } from "next";
-import { HousingUnitsTableLatest } from "~/components/home/HousingUnitsTable";
+import { HousingUnitsTableLatest } from "~/components/core/HousingUnitsTable";
 import BaseLayout from "~/components/sidebar/BaseLayout";
 
 

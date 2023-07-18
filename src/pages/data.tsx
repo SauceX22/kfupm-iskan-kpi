@@ -1,5 +1,5 @@
 import { type NextPage } from "next";
-import { HousingUnitsTable } from "~/components/home/HousingUnitsTable";
+import { HousingUnitsTable } from "~/components/core/HousingUnitsTable";
 import BaseLayout from "~/components/sidebar/BaseLayout";
 
 const DATA: NextPage = () => {
