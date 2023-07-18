@@ -28,7 +28,7 @@ async function createData() {
             dateSubmittedToGardening: string | null,
             dateExpectedGardeningCompletion: string | null,
             dateCompletedGardening: string | null,
-            dateCheckedAndSubmitedToCommittee: string | null,
+            dateSubmitedToCommittee: string | null,
             submissionStatus: HouseSubmissionStatus,
             satisfactionStatus: HouseSatisfactionStatus,
         }[]
@@ -64,8 +64,8 @@ async function createData() {
                     new Date(value.dateExpectedGardeningCompletion) : null,
                 dateCompletedGardening: value.dateCompletedGardening ?
                     new Date(value.dateCompletedGardening) : null,
-                dateCheckedAndSubmitedToCommittee: value.dateCheckedAndSubmitedToCommittee ?
-                    new Date(value.dateCheckedAndSubmitedToCommittee) : null,
+                dateSubmitedToCommittee: value.dateSubmitedToCommittee ?
+                    new Date(value.dateSubmitedToCommittee) : null,
             }
         }),
     });

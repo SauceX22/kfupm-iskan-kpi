@@ -101,31 +101,30 @@ model HouseUnit {
     area       Float   @default(0)
 
     // Maintenance
-    dateSubmittedToMaintenance        DateTime?
-    dateReceivedByMaintenance         DateTime?
-    dateReceivedFromMaintenance       DateTime?
-    dateRequiredByPersonnel           DateTime? /// From Maintenance Dept.
+    dateSubmittedToMaintenance       DateTime?
+    dateReceivedByMaintenance        DateTime?
+    dateReceivedFromMaintenance      DateTime?
+    dateRequiredByPersonnel          DateTime? /// From Maintenance Dept.
     // Cleaning
-    dateSubmittedToCleaning           DateTime?
-    dateExpectedCleaningCompletion    DateTime?
-    dateCompletedCleaning             DateTime?
+    dateSubmittedToCleaning          DateTime?
+    dateExpectedCleaningCompletion   DateTime?
+    dateCompletedCleaning            DateTime?
     // Furnishing
-    dateSubmittedToFurnishing         DateTime?
-    dateExpectedFurnishingCompletion  DateTime?
-    dateCompletedFurnishing           DateTime?
+    dateSubmittedToFurnishing        DateTime?
+    dateExpectedFurnishingCompletion DateTime?
+    dateCompletedFurnishing          DateTime?
     // Gardening
-    dateSubmittedToGardening          DateTime?
-    dateExpectedGardeningCompletion   DateTime?
-    dateCompletedGardening            DateTime?
+    dateSubmittedToGardening         DateTime?
+    dateExpectedGardeningCompletion  DateTime?
+    dateCompletedGardening           DateTime?
     // Tenant (instructor)
-    dateCheckedAndSubmitedToCommittee DateTime?
+    dateSubmitedToCommittee          DateTime?
     // Status
-    submissionStatus                  HouseSubmissionStatus   @default(PENDING_MAINTENANCE)
-    satisfactionStatus                HouseSatisfactionStatus @default(NONE)
-    comment                           String?
+    submissionStatus                 HouseSubmissionStatus   @default(PENDING_MAINTENANCE)
+    satisfactionStatus               HouseSatisfactionStatus @default(NONE)
+    comment                          String?
 
     // Flow: Maintenance -> Cleaning -> Furnishing -> Gardening -> Tenant Assignment
-    @@map("HouseUnitStatus")
 }
 
 // TODO satisfaction survey results
