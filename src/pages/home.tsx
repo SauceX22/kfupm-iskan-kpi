@@ -70,7 +70,7 @@ const HousingUnitsLatest = ({ className, ...props }: HousingUnitsTableProps) => 
               // TODO ensure this shows the last updated house first
               .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
               .map((house, idx) => (
-                <TableRow key={house.id}>
+                <TableRow key={house.id} highlightHover>
                   <TableCell className="text-center w-[50px]">{idx + 1}</TableCell>
                   <TableCell className="text-center">{house.unitNumber}</TableCell>
                   <TableCell className="text-center">{house.court}</TableCell>

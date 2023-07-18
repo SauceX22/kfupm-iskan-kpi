@@ -16,7 +16,7 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from "~/components/ui/table/table";
 import { HouseSubmissionStatusText } from "~/components/HouseUnitStatus";
 
@@ -73,7 +73,7 @@ const AllHousingUnits = ({ className, ...props }: HousingUnitsTableProps) => {
           </TableHeader>
           <TableBody>
             {housingUnits.map((house, idx) => (
-              <TableRow key={house.id}>
+              <TableRow key={house.id} highlightHover>
                 <TableCell className="text-center w-[50px]">{idx + 1}</TableCell>
                 <TableCell className="text-center">{house.unitNumber}</TableCell>
                 <TableCell className="text-center">{house.court}</TableCell>
