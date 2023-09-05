@@ -1,4 +1,4 @@
-import { TRPCClientError } from "@trpc/client";
+import { HouseSubmissionStatus, type HouseUnit } from "@prisma/client";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { processDays } from "~/utils/housing-kpi";
 import { z } from "zod";
@@ -66,14 +66,18 @@ export const houseRouter = createTRPCRouter({
             dateCompletedGardening: z.date().nullable(),
 
             dateSubmitedToCommittee: z.date().nullable(),
+            submissionStatus: z
+              .nativeEnum(HouseSubmissionStatus)
+              .default("NOT_STARTED"),
             comment: z.string().nullable(),
           })
         ),
       })
     )
-    .mutation(({ input, ctx }) => {
-      const allUnits = input.houseUnits.map(async (unit) => {
-        return await ctx.prisma.houseUnit.upsert({
+    .mutation(async ({ input, ctx }) => {
+      const allUnits: HouseUnit[] = [];
+      for (const unit of input.houseUnits) {
+        const resUnit = await ctx.prisma.houseUnit.upsert({
           where: {
             unitNumber: unit.unitNumber,
           },
@@ -84,7 +88,8 @@ export const houseRouter = createTRPCRouter({
             ...unit,
           },
         });
-      });
+        allUnits.push(resUnit);
+      }
       return allUnits;
     }),
   updateHouseUnit: publicProcedure
