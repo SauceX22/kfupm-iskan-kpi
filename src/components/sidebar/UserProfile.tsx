@@ -1,38 +1,17 @@
-import React, { useEffect, useState } from "react";
-import Head from "next/head";
+import React, { } from "react";
 import { useRouter } from "next/router";
-import { useSession, signOut } from "next-auth/react";
-import { Button, buttonVariants } from "~/components/ui/button/button";
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar/avatar';
-import { SideNav, SideNavButton, SideNavLink, SideNavLinks } from "./SideNav";
-import { ChevronRight, ChevronUp, Home, Languages, MoreVertical, Users } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
+import { ChevronRight } from "lucide-react";
 
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
     AlertDialogTrigger,
-} from "~/components/ui/alert-dialog/alert-dialog";
+} from "~/components/ui/alert-dialog";
 
 import {
-    Cloud,
-    CreditCard,
-    Github,
-    Keyboard,
-    LifeBuoy,
     LogOut,
-    Mail,
-    MessageSquare,
-    Plus,
-    PlusCircle,
     Settings,
     User,
-    UserPlus,
 } from "lucide-react"
 
 import {
@@ -41,15 +20,11 @@ import {
     DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
-    DropdownMenuPortal,
     DropdownMenuSeparator,
     DropdownMenuShortcut,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu/dropdown-menu"
-import { Skeleton } from "../ui/skeleton/skeleton";
+} from "~/components/ui/dropdown-menu"
+import { Skeleton } from "../ui/skeleton";
 
 type Props = {
     // custom props here...
