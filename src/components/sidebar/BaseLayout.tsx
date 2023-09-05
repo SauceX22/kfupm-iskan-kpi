@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
-import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
-import { SideNav, SideNavButton, SideNavLink, SideNavLinks } from "./SideNav";
-import { Home, Users } from "lucide-react";
 import Image from "next/image";
-
+import { useRouter } from "next/router";
 import { cn } from "~/lib/utils";
+import { Home, Users } from "lucide-react";
+import { useSession } from "next-auth/react";
+
+import { SideNav, SideNavButton, SideNavLink, SideNavLinks } from "./SideNav";
 
 type Props = {
   // custom props here...
@@ -28,14 +28,12 @@ const BaseLayout = ({ children, className, pageTitle, description }: Props) => {
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
-  }
+  };
 
   return (
     <>
       <Head>
-        <title>
-          {pageTitle}
-        </title>
+        <title>{pageTitle}</title>
         <meta name="description" content={description} />
       </Head>
 
@@ -43,7 +41,13 @@ const BaseLayout = ({ children, className, pageTitle, description }: Props) => {
         <SideNavButton onClick={handleToggle} />
         <SideNav isOpen={isOpen} className="border rounded-none">
           <div className="flex justify-center items-center w-full py-4 px-2">
-            <Image src="/kfupm-logo-text-green-en.svg" alt="KFUPM Logo" width={300} height={20} />
+            <Image
+              src="/kfupm-logo-text-green-en.svg"
+              alt="KFUPM Logo"
+              width={300}
+              height={20}
+              priority={false}
+            />
           </div>
           <SideNavLinks className="flex-grow px-2">
             <SideNavLink href="/home">
