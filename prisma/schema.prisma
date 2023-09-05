@@ -77,10 +77,13 @@ enum HouseSatisfactionStatus {
 
 enum HouseSubmissionStatus {
     NOT_STARTED
-    PENDING_MAINTENANCE
-    PENDING_CLEANING
-    PENDING_FURNISHING
-    PENDING_GARDENING
+    PENDING_MAINTENANCE_COMPLETION
+    PENDING_CLEANING_SUBMISSION
+    PENDING_CLEANING_COMPLETION
+    PENDING_FURNISHING_SUBMISSION
+    PENDING_FURNISHING_COMPLETION
+    PENDING_GARDENING_SUBMISSION
+    PENDING_GARDENING_COMPLETION
     PENDING_FINAL_INSPECTION
     PENDING_TENANT_ASSIGNMENT
     EARLY_SUBMISSION
@@ -119,7 +122,7 @@ model HouseUnit {
     // Tenant (instructor)
     dateSubmitedToCommittee          DateTime?
     // Status
-    submissionStatus                 HouseSubmissionStatus   @default(PENDING_MAINTENANCE)
+    submissionStatus                 HouseSubmissionStatus   @default(NOT_STARTED)
     satisfactionStatus               HouseSatisfactionStatus @default(NONE)
     comment                          String?
 
