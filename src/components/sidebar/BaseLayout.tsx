@@ -56,6 +56,9 @@ const BaseLayout = ({ children, className, pageTitle, description }: Props) => {
             <SideNavLink href="/data">
               <Users className="me-4 h-5 w-5" /> Data
             </SideNavLink>
+            <SideNavLink href="/graph">
+              <Users className="me-4 h-5 w-5" /> Graph
+            </SideNavLink>
           </SideNavLinks>
           {/* profile picture menu */}
           {/* <UserProfile mounted={mounted}></UserProfile> */}
