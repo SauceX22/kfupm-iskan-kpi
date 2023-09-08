@@ -1,4 +1,17 @@
 import { useRouter } from "next/router";
+import { HouseUnit } from "@prisma/client";
+import {
+  ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+  VisibilityState,
+  type ColumnDef,
+} from "@tanstack/react-table";
 import ImportSheet from "~/components/core/ImportSheet";
 import { HouseSubmissionStatusText } from "~/components/HouseUnitStatus";
 import { Button } from "~/components/ui/button";
@@ -9,6 +22,16 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { Checkbox } from "~/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 import { Separator } from "~/components/ui/separator";
 import {
   Table,
@@ -23,11 +46,38 @@ import { cn } from "~/lib/utils";
 import { api } from "~/utils/api";
 import { exportExcel } from "~/utils/io-excel";
 import { format } from "date-fns";
-import { ArrowRight, FileDown } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowUpDown,
+  FileDown,
+  MoreHorizontal,
+} from "lucide-react";
 
 type HousingUnitsTableProps = {
   // Custom props here
 } & React.ComponentProps<typeof Card>;
+
+// export const columns: ColumnDef<HouseUnit>[] = [
+//   {
+//     id: "select",
+//     header: ({ table }) => (
+//       <Checkbox
+//         checked={table.getIsAllPageRowsSelected()}
+//         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+//         aria-label="Select all"
+//       />
+//     ),
+//     cell: ({ row }) => (
+//       <Checkbox
+//         checked={row.getIsSelected()}
+//         onCheckedChange={(value) => row.toggleSelected(!!value)}
+//         aria-label="Select row"
+//       />
+//     ),
+//     enableSorting: false,
+//     enableHiding: false,
+//   },
+// ];
 
 export const HousingUnitsTableLatest = ({
   className,
@@ -121,6 +171,25 @@ export const HousingUnitsTable = ({
       staleTime: 1000 * 60 * 5, // 5 minutes
     }
   );
+  // TODO fix this
+  // const table = useReactTable<HouseUnit>({
+  //   data: housingUnits?.houses ?? [],
+  //   columns,
+  //   // onSortingChange: setSorting,
+  //   // onColumnFiltersChange: setColumnFilters,
+  //   getCoreRowModel: getCoreRowModel(),
+  //   getPaginationRowModel: getPaginationRowModel(),
+  //   getSortedRowModel: getSortedRowModel(),
+  //   getFilteredRowModel: getFilteredRowModel(),
+  //   // onColumnVisibilityChange: setColumnVisibility,
+  //   // onRowSelectionChange: setRowSelection,
+  //   // state: {
+  //   //   sorting,
+  //   //   columnFilters,
+  //   //   columnVisibility,
+  //   //   rowSelection,
+  //   // },
+  // });
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -147,6 +216,20 @@ export const HousingUnitsTable = ({
       </CardHeader>
       <Separator />
       <CardContent className="">
+        {/* {table
+          .getAllColumns()
+          .filter((column) => column.getCanHide())
+          .map((column) => {
+            return (
+              <DropdownMenuCheckboxItem
+                key={column.id}
+                className="capitalize"
+                checked={column.getIsVisible()}
+                onCheckedChange={(value) => column.toggleVisibility(!!value)}>
+                {column.id}
+              </DropdownMenuCheckboxItem>
+            );
+          })} */}
         <Table>
           <TableHeader>
             <TableRow>
