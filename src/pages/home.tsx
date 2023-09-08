@@ -6,7 +6,7 @@ import HousingUnitsSummaryTableLatest from "../components/core/HousingUnitsSumma
 
 const Home: NextPage = (props) => {
   return (
-    <BaseLayout pageTitle="Home">
+    <BaseLayout pageTitle="Home" className="flex flex-col gap-4">
       <HousingUnitsTableLatest />
       <HousingUnitsSummaryTableLatest />
     </BaseLayout>
