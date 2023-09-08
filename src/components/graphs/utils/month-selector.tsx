@@ -42,66 +42,72 @@ const MonthIntervalSelector: React.FC<MonthIntervalSelectorProps> = ({
 
   return (
     <div className="flex flex-row w-full justify-between gap-4">
-      <Select
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onValueChange={async (value) => await handleStartMonthChange(value)}>
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Select a start month" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Start Month</SelectLabel>
-            {/* cycle through all months from end month back to jan using date-fns lib */}
-            {Array.from(
-              { length: endMonth.getMonth() - startMonth.getMonth() + 1 },
-              (_, i) => {
-                const date = endOfMonth(
-                  new Date(endMonth.getFullYear(), endMonth.getMonth() - i, 1)
-                );
-                const dateStr = format(date, "MMM-yyyy");
-                return (
-                  <SelectItem
-                    key={dateStr}
-                    value={dateStr}
-                    disabled={date > selectedEndMonth}>
-                    {dateStr}
-                  </SelectItem>
-                );
-              }
-            ).reverse()}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-      <Select
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onValueChange={async (value) => await handleEndMonthChange(value)}>
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Select an end month" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>End Month</SelectLabel>
-            {/* cycle through all months from end month back to jan using date-fns lib */}
-            {Array.from(
-              { length: endMonth.getMonth() - startMonth.getMonth() + 1 },
-              (_, i) => {
-                const date = endOfMonth(
-                  new Date(endMonth.getFullYear(), endMonth.getMonth() - i, 1)
-                );
-                const dateStr = format(date, "MMM-yyyy");
-                return (
-                  <SelectItem
-                    key={dateStr}
-                    value={dateStr}
-                    disabled={date < selectedStartMonth}>
-                    {dateStr}
-                  </SelectItem>
-                );
-              }
-            ).reverse()}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+      <div className="flex flex-col gap-2 w-full">
+        Start Month
+        <Select
+          // eslint-disable-next-line @typescript-eslint/no-misused-promises
+          onValueChange={async (value) => await handleStartMonthChange(value)}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder={format(startMonth, "MMM-yyyy")} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Start Month</SelectLabel>
+              {/* cycle through all months from end month back to jan using date-fns lib */}
+              {Array.from(
+                { length: endMonth.getMonth() - startMonth.getMonth() + 1 },
+                (_, i) => {
+                  const date = endOfMonth(
+                    new Date(endMonth.getFullYear(), endMonth.getMonth() - i, 1)
+                  );
+                  const dateStr = format(date, "MMM-yyyy");
+                  return (
+                    <SelectItem
+                      key={dateStr}
+                      value={dateStr}
+                      disabled={date > selectedEndMonth}>
+                      {dateStr}
+                    </SelectItem>
+                  );
+                }
+              ).reverse()}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="flex flex-col gap-2 w-full">
+        End Month
+        <Select
+          // eslint-disable-next-line @typescript-eslint/no-misused-promises
+          onValueChange={async (value) => await handleEndMonthChange(value)}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder={format(endMonth, "MMM-yyyy")} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>End Month</SelectLabel>
+              {/* cycle through all months from end month back to jan using date-fns lib */}
+              {Array.from(
+                { length: endMonth.getMonth() - startMonth.getMonth() + 1 },
+                (_, i) => {
+                  const date = endOfMonth(
+                    new Date(endMonth.getFullYear(), endMonth.getMonth() - i, 1)
+                  );
+                  const dateStr = format(date, "MMM-yyyy");
+                  return (
+                    <SelectItem
+                      key={dateStr}
+                      value={dateStr}
+                      disabled={date < selectedStartMonth}>
+                      {dateStr}
+                    </SelectItem>
+                  );
+                }
+              ).reverse()}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   );
 };
