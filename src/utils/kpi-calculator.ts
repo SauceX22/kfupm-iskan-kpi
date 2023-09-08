@@ -294,7 +294,7 @@ export const processDays = ({
               (unitsReceivedFromMaintenance.length /
                 unitsRequiredByHousing.length) *
                 10
-            ) / 10
+            ) * 10
           );
         })(),
         unitsCompletedPercentage: (() => {
