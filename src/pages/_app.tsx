@@ -7,6 +7,8 @@ import "~/styles/globals.css";
 
 import { Toaster } from "~/components/ui/toaster";
 
+import { ThemeProvider } from "../components/ui/theme-provider";
+
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
@@ -14,7 +16,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <Toaster />
-      <Component {...pageProps} />
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <Component {...pageProps} />
+      </ThemeProvider>
     </SessionProvider>
   );
 };
