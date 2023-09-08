@@ -89,7 +89,7 @@ export const HousingUnitsTableLatest = ({
     data: housingUnits,
     isLoading,
     error,
-  } = api.housing.getHouseUnits.useQuery({});
+  } = api.housing.getHouseUnitsProcessedDays.useQuery({});
 
   // TODO: fix these into a proper error component
   if (isLoading) {
@@ -165,7 +165,7 @@ export const HousingUnitsTable = ({
     data: housingUnits,
     isLoading,
     error,
-  } = api.housing.getHouseUnits.useQuery(
+  } = api.housing.getHouseUnitsProcessedDays.useQuery(
     {},
     {
       staleTime: 1000 * 60 * 5, // 5 minutes

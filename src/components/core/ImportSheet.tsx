@@ -54,7 +54,7 @@ const ImportSheet = (props: Props) => {
         },
         {
           async onSuccess(data, variables, context) {
-            await queryClient.housing.getHouseUnits.invalidate();
+            await queryClient.housing.getHouseUnitsProcessedDays.invalidate();
             toast({
               title: "Import Success!",
               description: `${variables.houseUnits.length} Housing units imported successfully.`,

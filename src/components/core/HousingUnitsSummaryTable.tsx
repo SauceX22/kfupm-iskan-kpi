@@ -32,7 +32,7 @@ const HousingUnitsSummaryTableLatest = ({
     data: housingUnits,
     isLoading,
     error,
-  } = api.housing.getHouseUnits.useQuery({});
+  } = api.housing.getHouseUnitsProcessedDays.useQuery({});
 
   const lastXMonths = Array.from({ length: monthsBack }, (_, i) => {
     const date = subMonths(startOfMonth(new Date()), i);
