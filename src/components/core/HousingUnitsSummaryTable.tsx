@@ -92,7 +92,7 @@ const HousingUnitsSummaryTableLatest = ({
           </TableHeader>
           <TableBody className="text-center">
             {/* column for every month, for every property there should be a row */}
-            <TableRow className="bg-gray-100">
+            <TableRow className="bg-muted/30">
               <TableHead className="text-center font-bold border-r">
                 1
               </TableHead>
@@ -131,7 +131,7 @@ const HousingUnitsSummaryTableLatest = ({
                 </TableCell>
               ))}
             </TableRow>
-            <TableRow className="bg-gray-100">
+            <TableRow className="bg-muted/30">
               <TableHead className="text-center font-bold border-r">
                 3
               </TableHead>
@@ -167,7 +167,7 @@ const HousingUnitsSummaryTableLatest = ({
                 </TableCell>
               ))}
             </TableRow>
-            <TableRow className="bg-gray-100">
+            <TableRow className="bg-muted/30">
               <TableHead className="text-center font-bold border-r">
                 5
               </TableHead>
@@ -203,7 +203,7 @@ const HousingUnitsSummaryTableLatest = ({
                 </TableCell>
               ))}
             </TableRow>
-            <TableRow className="bg-gray-100">
+            <TableRow className="bg-muted/30">
               <TableHead className="text-center font-bold border-r">
                 7
               </TableHead>
@@ -239,7 +239,7 @@ const HousingUnitsSummaryTableLatest = ({
                 </TableCell>
               ))}
             </TableRow>
-            <TableRow className="bg-gray-100">
+            <TableRow className="bg-muted/30">
               <TableHead className="text-center font-bold border-r">
                 9
               </TableHead>
@@ -275,7 +275,7 @@ const HousingUnitsSummaryTableLatest = ({
                 </TableCell>
               ))}
             </TableRow>
-            <TableRow className="bg-gray-100">
+            <TableRow className="bg-muted/30">
               <TableHead className="text-center font-bold border-r">
                 11
               </TableHead>
