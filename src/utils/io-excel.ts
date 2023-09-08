@@ -5,7 +5,7 @@ import {
   saveWorkbook,
   styleTemplateWorkbook,
 } from "~/utils/excel-utils";
-import { differenceInDays } from "date-fns";
+import { differenceInDays, startOfToday } from "date-fns";
 import * as Excel from "exceljs";
 // use file saver
 import { saveAs } from "file-saver";
@@ -90,9 +90,9 @@ type ValidatedRow = {
 //     DONE_ON_TARGET
 //     LATE_SUBMISSION
 // }
-const dayDifference = (date1: Date | null, date2: Date | null) => {
-  if (!date1 || !date2) return 0;
-  return differenceInDays(date1, date2);
+const dayDifference = (dateLater: Date | null, dateEarlier: Date | null) => {
+  if (!dateLater || !dateEarlier) return 0;
+  return differenceInDays(dateLater, dateEarlier);
 };
 
 const calculateDaysLaterThanPlanned = (houseUnit: ZodHouseUnit) => {
@@ -101,34 +101,17 @@ const calculateDaysLaterThanPlanned = (houseUnit: ZodHouseUnit) => {
   // and the date completed by departments and the date submitted to committee
 
   // sum of every submission to expected completion of each department
-  const daysPlannedToTake =
-    dayDifference(
-      houseUnit.dateSubmittedToMaintenance,
-      houseUnit.dateRequiredByPersonnel
-    ) +
-    dayDifference(
-      houseUnit.dateSubmittedToCleaning,
-      houseUnit.dateExpectedCleaningCompletion
-    ) +
-    dayDifference(
-      houseUnit.dateSubmittedToFurnishing,
-      houseUnit.dateExpectedFurnishingCompletion
-    ) +
-    dayDifference(
-      houseUnit.dateSubmittedToGardening,
-      houseUnit.dateExpectedGardeningCompletion
-    ) +
-    dayDifference(
-      houseUnit.dateExpectedGardeningCompletion,
-      houseUnit.dateSubmitedToCommittee
-    );
+  const daysPlannedToTake = dayDifference(
+    houseUnit.dateRequiredByPersonnel,
+    houseUnit.dateSubmittedToMaintenance
+  );
   // diff between date submitted to maintenance and date submitted to committee
   const daysTaken = dayDifference(
-    houseUnit.dateSubmittedToMaintenance,
-    houseUnit.dateSubmitedToCommittee
+    houseUnit.dateReceivedFromMaintenance ?? startOfToday(),
+    houseUnit.dateSubmittedToMaintenance
   );
 
-  return daysPlannedToTake - daysTaken;
+  return daysTaken - daysPlannedToTake;
 };
 
 // TODO get this to run on every update of the database row
