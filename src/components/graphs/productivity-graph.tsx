@@ -37,7 +37,6 @@ const ProductivityGraph = ({}: ProductivityGraphProps) => {
       endMonth: endMonth,
     },
     {
-      enabled: false,
       refetchOnMount: false,
       queryKey: [
         "housing.getProductivityStats",
@@ -46,9 +45,15 @@ const ProductivityGraph = ({}: ProductivityGraphProps) => {
     }
   );
 
-  const handleIntervalChange = (start: Date, end: Date) => {
+  const handleIntervalChange = async (start: Date, end: Date) => {
     setStartMonth(start);
     setEndMonth(end);
+    await refetch({
+      queryKey: [
+        "housing.getProductivityStats",
+        { startMonth: startMonth, endMonth: endMonth },
+      ],
+    });
     console.log(format(start, "MMM-yyyy"), format(end, "MMM-yyyy"));
   };
 
@@ -77,7 +82,7 @@ const ProductivityGraph = ({}: ProductivityGraphProps) => {
         />
       </LineChart>
 
-      <CardFooter className="w-full flex flex-col gap-2">
+      <CardFooter className="w-full flex flex-col gap-4">
         {/* This component deals with (start as startOfMonth) and (end as endOfMonth) to ensure full interval */}
         <MonthIntervalSelector
           startMonth={startOfMonth(new Date("2023-01-01"))}
@@ -87,25 +92,6 @@ const ProductivityGraph = ({}: ProductivityGraphProps) => {
             await handleIntervalChange(startMonth, endMonth)
           }
         />
-        <Button
-          className="w-1/2 self-center"
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          onClick={async () =>
-            await refetch({
-              queryKey: [
-                "housing.getProductivityStats",
-                { startMonth: startMonth, endMonth: endMonth },
-              ],
-            })
-          }
-          disabled={isFetching}>
-          {isFetching ? (
-            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-          ) : (
-            <RefreshCwIcon className="w-4 h-4 mr-2" />
-          )}
-          Refresh
-        </Button>
       </CardFooter>
     </Card>
   );
