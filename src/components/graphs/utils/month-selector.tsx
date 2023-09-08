@@ -13,7 +13,7 @@ import { endOfMonth, format, startOfMonth } from "date-fns";
 interface MonthIntervalSelectorProps {
   startMonth: Date;
   endMonth: Date;
-  onValueChange: (startMonth: Date, endMonth: Date) => void;
+  onValueChange: (startMonth: Date, endMonth: Date) => Promise<void> | void;
 }
 
 const MonthIntervalSelector: React.FC<MonthIntervalSelectorProps> = ({
@@ -28,21 +28,23 @@ const MonthIntervalSelector: React.FC<MonthIntervalSelectorProps> = ({
     endOfMonth(new Date())
   );
 
-  const handleStartMonthChange = (value: string) => {
+  const handleStartMonthChange = async (value: string) => {
     const monthStart = startOfMonth(new Date(value));
     setSelectedStartMonth(monthStart);
-    onValueChange(monthStart, selectedEndMonth);
+    await onValueChange(monthStart, selectedEndMonth);
   };
 
-  const handleEndMonthChange = (value: string) => {
+  const handleEndMonthChange = async (value: string) => {
     const monthEnd = endOfMonth(new Date(value));
     setSelectedEndMonth(monthEnd);
-    onValueChange(selectedStartMonth, monthEnd);
+    await onValueChange(selectedStartMonth, monthEnd);
   };
 
   return (
     <div className="flex flex-row w-full justify-between gap-4">
-      <Select onValueChange={handleStartMonthChange}>
+      <Select
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        onValueChange={async (value) => await handleStartMonthChange(value)}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Select a start month" />
         </SelectTrigger>
@@ -70,7 +72,9 @@ const MonthIntervalSelector: React.FC<MonthIntervalSelectorProps> = ({
           </SelectGroup>
         </SelectContent>
       </Select>
-      <Select onValueChange={handleEndMonthChange}>
+      <Select
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        onValueChange={async (value) => await handleEndMonthChange(value)}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Select an end month" />
         </SelectTrigger>
