@@ -1,13 +1,8 @@
 import { HouseSubmissionStatus, type HouseUnit } from "@prisma/client";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { processDays } from "~/utils/housing-kpi";
+import { processDays } from "~/utils/kpi-calculator";
 import { z } from "zod";
 
-type jsonReturn = {
-  id: string;
-  course_id: string;
-  sections: string[];
-};
 export const houseRouter = createTRPCRouter({
   getHouseUnit: publicProcedure
     .input(
@@ -21,9 +16,37 @@ export const houseRouter = createTRPCRouter({
           id: input.id,
         },
       });
-      return processDays(unit);
+      return unit;
     }),
   getHouseUnits: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().optional(),
+        skip: z.number().optional(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const allUnits = await ctx.prisma.houseUnit.findMany({
+        take: input.limit,
+        skip: input.skip,
+      });
+      return allUnits;
+    }),
+  getHouseUnitProcessedDays: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const unit = await ctx.prisma.houseUnit.findUniqueOrThrow({
+        where: {
+          id: input.id,
+        },
+      });
+      return processDays(unit);
+    }),
+  getHouseUnitsProcessedDays: publicProcedure
     .input(
       z.object({
         limit: z.number().optional(),
