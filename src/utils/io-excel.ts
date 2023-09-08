@@ -1,4 +1,3 @@
-import { EventEmitter } from "events";
 import { useEffect, useState } from "react";
 import {
   excelTemplateColumns,
@@ -7,7 +6,6 @@ import {
 } from "~/utils/excel-utils";
 import { differenceInDays, startOfToday } from "date-fns";
 import * as Excel from "exceljs";
-// use file saver
 import { saveAs } from "file-saver";
 
 import { zodHouseUnitSchema, type ZodHouseUnit } from "./validation";
@@ -75,21 +73,6 @@ type ValidatedRow = {
   message: string | undefined;
 };
 
-// enum HouseSubmissionStatus {
-//     NOT_STARTED
-//     PENDING_MAINTENANCE_COMPLETION
-//     PENDING_CLEANING_SUBMISSION
-//     PENDING_CLEANING_COMPLETION
-//     PENDING_FURNISHING_SUBMISSION
-//     PENDING_FURNISHING_COMPLETION
-//     PENDING_GARDENING_SUBMISSION
-//     PENDING_GARDENING_COMPLETION
-//     PENDING_FINAL_INSPECTION
-//     PENDING_TENANT_ASSIGNMENT
-//     EARLY_SUBMISSION
-//     DONE_ON_TARGET
-//     LATE_SUBMISSION
-// }
 const dayDifference = (dateLater: Date | null, dateEarlier: Date | null) => {
   if (!dateLater || !dateEarlier) return 0;
   return differenceInDays(dateLater, dateEarlier);
@@ -115,67 +98,68 @@ const calculateDaysLaterThanPlanned = (houseUnit: ZodHouseUnit) => {
 };
 
 // TODO get this to run on every update of the database row
-const setHouseSubmissionStatus = (rows: ZodHouseUnit[]) => {
+const updateHouseSubmissionStatus = (row: ZodHouseUnit) => {
   // default is not started
+  // Ferdaws court has no gardening
+  const isFerdawsCourt = row.court.toLowerCase() === "Ferdaws";
+  if (
+    (row.dateSubmittedToMaintenance || row.dateReceivedByMaintenance) &&
+    !row.dateReceivedFromMaintenance
+  ) {
+    row.submissionStatus = "PENDING_MAINTENANCE_COMPLETION";
+  } else if (row.dateReceivedFromMaintenance && !row.dateSubmittedToCleaning) {
+    row.submissionStatus = "PENDING_CLEANING_SUBMISSION";
+  } else if (row.dateSubmittedToCleaning && !row.dateCompletedCleaning) {
+    row.submissionStatus = "PENDING_CLEANING_COMPLETION";
+  } else if (row.dateCompletedCleaning && !row.dateSubmittedToFurnishing) {
+    row.submissionStatus = "PENDING_FURNISHING_SUBMISSION";
+  } else if (row.dateSubmittedToFurnishing && !row.dateCompletedFurnishing) {
+    row.submissionStatus = "PENDING_FURNISHING_COMPLETION";
+  } else if (
+    row.dateCompletedFurnishing &&
+    !row.dateSubmittedToGardening &&
+    // skip gardening for Ferdaws court
+    !isFerdawsCourt
+  ) {
+    row.submissionStatus = "PENDING_GARDENING_SUBMISSION";
+  } else if (
+    row.dateSubmittedToGardening &&
+    !row.dateCompletedGardening &&
+    // skip gardening for Ferdaws court
+    !isFerdawsCourt
+  ) {
+    row.submissionStatus = "PENDING_GARDENING_COMPLETION";
+  } else if (row.dateCompletedGardening && !row.dateSubmitedToCommittee) {
+    row.submissionStatus = "PENDING_FINAL_INSPECTION";
+  } else if (
+    row.dateSubmitedToCommittee &&
+    calculateDaysLaterThanPlanned(row) > 1
+  ) {
+    row.submissionStatus = "LATE_SUBMISSION";
+  } else if (
+    row.dateSubmitedToCommittee &&
+    calculateDaysLaterThanPlanned(row) < -1
+  ) {
+    row.submissionStatus = "EARLY_SUBMISSION";
+  } else if (
+    row.dateSubmitedToCommittee &&
+    calculateDaysLaterThanPlanned(row) === 0
+  ) {
+    row.submissionStatus = "DONE_ON_TARGET";
+  } else {
+    row.submissionStatus = "NOT_STARTED";
+  }
+  console.log(
+    "unit DLTP: ",
+    row.unitNumber,
+    calculateDaysLaterThanPlanned(row),
+    row.submissionStatus
+  );
+};
+
+const updateHouseSubmissionStatuses = (rows: ZodHouseUnit[]) => {
   rows.map((row) => {
-    // Ferdaws court has no gardening
-    const isFerdawsCourt = row.court.toLowerCase() === "Ferdaws";
-    if (
-      (row.dateSubmittedToMaintenance || row.dateReceivedByMaintenance) &&
-      !row.dateReceivedFromMaintenance
-    ) {
-      row.submissionStatus = "PENDING_MAINTENANCE_COMPLETION";
-    } else if (
-      row.dateReceivedFromMaintenance &&
-      !row.dateSubmittedToCleaning
-    ) {
-      row.submissionStatus = "PENDING_CLEANING_SUBMISSION";
-    } else if (row.dateSubmittedToCleaning && !row.dateCompletedCleaning) {
-      row.submissionStatus = "PENDING_CLEANING_COMPLETION";
-    } else if (row.dateCompletedCleaning && !row.dateSubmittedToFurnishing) {
-      row.submissionStatus = "PENDING_FURNISHING_SUBMISSION";
-    } else if (row.dateSubmittedToFurnishing && !row.dateCompletedFurnishing) {
-      row.submissionStatus = "PENDING_FURNISHING_COMPLETION";
-    } else if (
-      row.dateCompletedFurnishing &&
-      !row.dateSubmittedToGardening &&
-      // skip gardening for Ferdaws court
-      !isFerdawsCourt
-    ) {
-      row.submissionStatus = "PENDING_GARDENING_SUBMISSION";
-    } else if (
-      row.dateSubmittedToGardening &&
-      !row.dateCompletedGardening &&
-      // skip gardening for Ferdaws court
-      !isFerdawsCourt
-    ) {
-      row.submissionStatus = "PENDING_GARDENING_COMPLETION";
-    } else if (row.dateCompletedGardening && !row.dateSubmitedToCommittee) {
-      row.submissionStatus = "PENDING_FINAL_INSPECTION";
-    } else if (
-      row.dateSubmitedToCommittee &&
-      calculateDaysLaterThanPlanned(row) > 1
-    ) {
-      row.submissionStatus = "LATE_SUBMISSION";
-    } else if (
-      row.dateSubmitedToCommittee &&
-      calculateDaysLaterThanPlanned(row) < -1
-    ) {
-      row.submissionStatus = "EARLY_SUBMISSION";
-    } else if (
-      row.dateSubmitedToCommittee &&
-      calculateDaysLaterThanPlanned(row) === 0
-    ) {
-      row.submissionStatus = "DONE_ON_TARGET";
-    } else {
-      row.submissionStatus = "NOT_STARTED";
-    }
-    console.log(
-      "unit DLTP: ",
-      row.unitNumber,
-      calculateDaysLaterThanPlanned(row),
-      row.submissionStatus
-    );
+    updateHouseSubmissionStatus(row);
   });
 };
 
@@ -309,7 +293,7 @@ export const useImportExcel: (input: UseImportInput) => UseImportOutput = ({
         if (onSuccess && invalidRows.length === 0) {
           // got through all the valid rows and check for the dates
           // and set the house submission status accordingly
-          setHouseSubmissionStatus(validRows);
+          updateHouseSubmissionStatuses(validRows);
           setValidRows(validRows);
           onSuccess(validRows);
         }
