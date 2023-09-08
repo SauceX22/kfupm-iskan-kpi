@@ -44,7 +44,7 @@ export const houseRouter = createTRPCRouter({
           id: input.id,
         },
       });
-      return processDays(unit);
+      return processDays({ houses: unit });
     }),
   getHouseUnitsProcessedDays: publicProcedure
     .input(
@@ -58,7 +58,8 @@ export const houseRouter = createTRPCRouter({
         take: input.limit,
         skip: input.skip,
       });
-      return processDays(allUnits);
+      return processDays({ houses: allUnits });
+    }),
     }),
   importExcelFileData: publicProcedure
     .input(
@@ -153,7 +154,7 @@ export const houseRouter = createTRPCRouter({
         },
         data: input,
       });
-      return processDays(updatedUnit);
+      return processDays({ houses: updatedUnit });
     }),
   deleteHouseUnit: publicProcedure
     .input(
@@ -167,6 +168,6 @@ export const houseRouter = createTRPCRouter({
           id: input.id,
         },
       });
-      return processDays(deletedUnit);
+      return processDays({ houses: deletedUnit });
     }),
 });
