@@ -60,6 +60,20 @@ export const houseRouter = createTRPCRouter({
       });
       return processDays({ houses: allUnits });
     }),
+  getProductivityStats: publicProcedure
+    .input(
+      z.object({
+        startMonth: z.date(),
+        endMonth: z.date(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const allUnits = await ctx.prisma.houseUnit.findMany({});
+      return processDays({
+        houses: allUnits,
+        startMonth: input.startMonth,
+        endMonth: input.endMonth,
+      });
     }),
   importExcelFileData: publicProcedure
     .input(
