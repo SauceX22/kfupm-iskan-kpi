@@ -102,52 +102,50 @@ const updateHouseSubmissionStatus = (row: ZodHouseUnit) => {
   // default is not started
   // Ferdaws court has no gardening
   const isFerdawsCourt = row.court.toLowerCase() === "Ferdaws";
+  if (row.dateSubmitedToCommittee && calculateDaysLaterThanPlanned(row) > 1) {
+    return (row.submissionStatus = "LATE_SUBMISSION");
+  } else if (
+    row.dateSubmitedToCommittee &&
+    calculateDaysLaterThanPlanned(row) < -1
+  ) {
+    return (row.submissionStatus = "EARLY_SUBMISSION");
+  } else if (
+    row.dateSubmitedToCommittee &&
+    calculateDaysLaterThanPlanned(row) === 0
+  ) {
+    return (row.submissionStatus = "DONE_ON_TARGET");
+  }
   if (
     (row.dateSubmittedToMaintenance || row.dateReceivedByMaintenance) &&
     !row.dateReceivedFromMaintenance
   ) {
-    row.submissionStatus = "PENDING_MAINTENANCE_COMPLETION";
+    return (row.submissionStatus = "PENDING_MAINTENANCE_COMPLETION");
   } else if (row.dateReceivedFromMaintenance && !row.dateSubmittedToCleaning) {
-    row.submissionStatus = "PENDING_CLEANING_SUBMISSION";
+    return (row.submissionStatus = "PENDING_CLEANING_SUBMISSION");
   } else if (row.dateSubmittedToCleaning && !row.dateCompletedCleaning) {
-    row.submissionStatus = "PENDING_CLEANING_COMPLETION";
+    return (row.submissionStatus = "PENDING_CLEANING_COMPLETION");
   } else if (row.dateCompletedCleaning && !row.dateSubmittedToFurnishing) {
-    row.submissionStatus = "PENDING_FURNISHING_SUBMISSION";
+    return (row.submissionStatus = "PENDING_FURNISHING_SUBMISSION");
   } else if (row.dateSubmittedToFurnishing && !row.dateCompletedFurnishing) {
-    row.submissionStatus = "PENDING_FURNISHING_COMPLETION";
+    return (row.submissionStatus = "PENDING_FURNISHING_COMPLETION");
   } else if (
     row.dateCompletedFurnishing &&
     !row.dateSubmittedToGardening &&
     // skip gardening for Ferdaws court
     !isFerdawsCourt
   ) {
-    row.submissionStatus = "PENDING_GARDENING_SUBMISSION";
+    return (row.submissionStatus = "PENDING_GARDENING_SUBMISSION");
   } else if (
     row.dateSubmittedToGardening &&
     !row.dateCompletedGardening &&
     // skip gardening for Ferdaws court
     !isFerdawsCourt
   ) {
-    row.submissionStatus = "PENDING_GARDENING_COMPLETION";
+    return (row.submissionStatus = "PENDING_GARDENING_COMPLETION");
   } else if (row.dateCompletedGardening && !row.dateSubmitedToCommittee) {
-    row.submissionStatus = "PENDING_FINAL_INSPECTION";
-  } else if (
-    row.dateSubmitedToCommittee &&
-    calculateDaysLaterThanPlanned(row) > 1
-  ) {
-    row.submissionStatus = "LATE_SUBMISSION";
-  } else if (
-    row.dateSubmitedToCommittee &&
-    calculateDaysLaterThanPlanned(row) < -1
-  ) {
-    row.submissionStatus = "EARLY_SUBMISSION";
-  } else if (
-    row.dateSubmitedToCommittee &&
-    calculateDaysLaterThanPlanned(row) === 0
-  ) {
-    row.submissionStatus = "DONE_ON_TARGET";
+    return (row.submissionStatus = "PENDING_FINAL_INSPECTION");
   } else {
-    row.submissionStatus = "NOT_STARTED";
+    return (row.submissionStatus = "NOT_STARTED");
   }
   console.log(
     "unit DLTP: ",
