@@ -1,30 +1,12 @@
 import { type HouseUnit } from "@prisma/client";
+import { getDayDifference, getLastXMonths } from "~/utils/kpi-utils";
 import {
-  addMonths,
   compareAsc,
-  differenceInDays,
   endOfMonth,
   format,
   isWithinInterval,
   startOfMonth,
-  subMonths,
 } from "date-fns";
-
-const getDayDifference = (date1: Date | null, date2: Date | null) => {
-  if (!date1 || !date2) return null;
-  return differenceInDays(date1, date2);
-};
-
-const lastXMonths = (monthsBack: number) =>
-  Array.from({ length: (monthsBack = 6) }, (_, i) => {
-    const date = subMonths(startOfMonth(new Date()), i);
-    // if the date is before "Jan-23", return nothing and
-    // filter out any empty values at the end
-    if (compareAsc(date, new Date(2023, 0, 1)) === -1) return;
-    return date;
-  })
-    .filter(Date)
-    .reverse() as Date[];
 
 export const processDays = (houses: HouseUnit[] | HouseUnit) => {
   // ensure houses is actually an array, or convert
@@ -94,7 +76,7 @@ export const processDays = (houses: HouseUnit[] | HouseUnit) => {
   // #18 "Avg Total Days Houses Received Maintenance", (check)
   // #19 "Avg Total late Days Houses Received from maintenance", (avg of units received from maintenance for that month)
   // #20 "Avg Total Days to Prepare a House", (avg of (units submitted to committee?) units completed by gardening for that month)
-  const dataMonthStats = lastXMonths(7).map((date) => {
+  const dataMonthStats = getLastXMonths(7).map((date) => {
     const monthStartEndInterval = {
       start: startOfMonth(date),
       end: endOfMonth(date),
@@ -471,22 +453,4 @@ export const processDays = (houses: HouseUnit[] | HouseUnit) => {
     houses: processingDays,
     stats: dataMonthStats,
   };
-};
-
-declare global {
-  interface Array<T> {
-    groupBy<K extends keyof never>(getKey: (item: T) => K): Record<K, T[]>;
-  }
-}
-
-Array.prototype.groupBy = function <T, K extends keyof never>(
-  this: T[],
-  getKey: (item: T) => K
-): Record<K, T[]> {
-  return this.reduce((previous, currentItem) => {
-    const group = getKey(currentItem);
-    if (!previous[group]) previous[group] = [];
-    previous[group].push(currentItem);
-    return previous;
-  }, {} as Record<K, T[]>);
 };
