@@ -2,13 +2,40 @@ import { type HouseUnit } from "@prisma/client";
 import { getDayDifference, getLastXMonths } from "~/utils/kpi-utils";
 import {
   compareAsc,
+  eachMonthOfInterval,
   endOfMonth,
   format,
+  Interval,
   isWithinInterval,
   startOfMonth,
+  subMonths,
 } from "date-fns";
 
-export const processDays = (houses: HouseUnit[] | HouseUnit) => {
+/**
+ * @description
+ * This function takes in a house unit or an array of house units
+ * and returns an object containing the house unit(s) and the stats
+ * of the house unit(s) for a period of months.
+ *
+ * **IMPORTANT:** If no period is specified, the method will default to the last 6 months.
+ * Otherwise you can specify a start and end month or a number of months back.
+ *
+ * @param houses - a house unit or an array of house units
+ * @param lastXMonths - (defaults to 6) the number of months to go back from the current month
+ * @param startMonth - the start month of the period to calculate the stats for
+ * @param endMonth - the end month of the period to calculate the stats for
+ * @returns an object containing the house unit(s) and the stats of the house unit(s) for a period of months
+ */
+export const processDays = ({
+  houses,
+  lastXMonths = 6,
+  ...periodProps
+}: {
+  houses: HouseUnit[] | HouseUnit;
+  lastXMonths?: number;
+  startMonth?: Date;
+  endMonth?: Date;
+}) => {
   // ensure houses is actually an array, or convert
   houses = Array.isArray(houses) ? houses : [houses];
   const processingDays = houses.map((house) => {
@@ -76,7 +103,18 @@ export const processDays = (houses: HouseUnit[] | HouseUnit) => {
   // #18 "Avg Total Days Houses Received Maintenance", (check)
   // #19 "Avg Total late Days Houses Received from maintenance", (avg of units received from maintenance for that month)
   // #20 "Avg Total Days to Prepare a House", (avg of (units submitted to committee?) units completed by gardening for that month)
-  const dataMonthStats = getLastXMonths(7).map((date) => {
+  console.log("processingDays");
+  const months =
+    // given a start and end month, get all the months in between
+    eachMonthOfInterval({
+      // use lastXMonths if no start and end month are specified
+      start:
+        periodProps.startMonth ??
+        startOfMonth(subMonths(new Date(), lastXMonths)),
+      end: periodProps.endMonth ?? endOfMonth(new Date()),
+    });
+
+  const dataMonthStats = months.map((date) => {
     const monthStartEndInterval = {
       start: startOfMonth(date),
       end: endOfMonth(date),
