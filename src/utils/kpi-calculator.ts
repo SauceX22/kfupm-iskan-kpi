@@ -1,11 +1,10 @@
 import { type HouseUnit } from "@prisma/client";
-import { getDayDifference, getLastXMonths } from "~/utils/kpi-utils";
+import { getDayDifference } from "~/utils/kpi-utils";
 import {
   compareAsc,
   eachMonthOfInterval,
   endOfMonth,
   format,
-  Interval,
   isWithinInterval,
   startOfMonth,
   subMonths,
@@ -108,11 +107,18 @@ export const processDays = ({
     // given a start and end month, get all the months in between
     eachMonthOfInterval({
       // use lastXMonths if no start and end month are specified
-      start:
-        periodProps.startMonth ??
-        startOfMonth(subMonths(new Date(), lastXMonths)),
-      end: periodProps.endMonth ?? endOfMonth(new Date()),
-    });
+      start: startOfMonth(
+        periodProps.startMonth ?? subMonths(new Date(), lastXMonths)
+      ),
+      end: endOfMonth(periodProps.endMonth ?? new Date()),
+    })
+      // filter out any months that are before Jan-23
+      .filter((month) => compareAsc(month, new Date(2023, 0, 1)) !== -1);
+
+  console.log("lastXMonths", lastXMonths);
+  console.log("startMonth", periodProps.startMonth);
+  console.log("endMonth", periodProps.endMonth);
+  console.log("months", months);
 
   const dataMonthStats = months.map((date) => {
     const monthStartEndInterval = {
