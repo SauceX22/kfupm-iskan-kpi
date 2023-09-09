@@ -94,6 +94,24 @@ const HousingUnitsSummaryTableLatest = ({
             {/* column for every month, for every property there should be a row */}
             <TableRow className="bg-muted/30">
               <TableHead className="text-center font-bold border-r">
+                2
+              </TableHead>
+              <TableHead className="text-center font-bold border-r">
+                Units Submitted To Maintenance
+              </TableHead>
+              {housingUnits.stats.map((stat, idx) => (
+                <TableCell
+                  key={idx}
+                  className={cn(
+                    "font-bold",
+                    idx !== housingUnits.stats.length - 1 && "border-r"
+                  )}>
+                  {stat.monthStats.unitsRequiredByHousing.length}
+                </TableCell>
+              ))}
+            </TableRow>
+            <TableRow>
+              <TableHead className="text-center font-bold border-r">
                 1
               </TableHead>
               <TableHead className="text-center font-bold border-r">
@@ -116,24 +134,6 @@ const HousingUnitsSummaryTableLatest = ({
                     ) / 10}
                     %)
                   </span>
-                </TableCell>
-              ))}
-            </TableRow>
-            <TableRow>
-              <TableHead className="text-center font-bold border-r">
-                2
-              </TableHead>
-              <TableHead className="text-center font-bold border-r">
-                Units Required By Housing
-              </TableHead>
-              {housingUnits.stats.map((stat, idx) => (
-                <TableCell
-                  key={idx}
-                  className={cn(
-                    "font-bold",
-                    idx !== housingUnits.stats.length - 1 && "border-r"
-                  )}>
-                  {stat.monthStats.unitsRequiredByHousing.length}
                 </TableCell>
               ))}
             </TableRow>
