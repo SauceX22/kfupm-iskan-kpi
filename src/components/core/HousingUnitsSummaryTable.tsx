@@ -108,7 +108,13 @@ const HousingUnitsSummaryTableLatest = ({
                   )}>
                   {stat.monthStats.unitsReceivedFromMaintenance.length}
                   <span className="ml-2 text-xs font-semibold">
-                    ({stat.monthStats.unitsReceivedFromMaintenancePercentage}%)
+                    (
+                    {Math.round(
+                      (stat.monthStats.unitsReceivedFromMaintenance.length /
+                        stat.monthStats.unitsRequiredByHousing.length) *
+                        1000
+                    ) / 10}
+                    %)
                   </span>
                 </TableCell>
               ))}

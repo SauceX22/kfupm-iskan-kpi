@@ -276,33 +276,6 @@ export const processDays = ({
           );
         }),
         // group 5: percentages units
-        unitsReceivedFromMaintenancePercentage: (() => {
-          const unitsReceivedFromMaintenance = processingDays.filter(
-            (house) =>
-              house.dateReceivedFromMaintenance &&
-              isWithinInterval(
-                house.dateReceivedFromMaintenance,
-                monthStartEndInterval
-              )
-          );
-          const unitsRequiredByHousing = processingDays.filter((house) => {
-            // FIXME n units required by housing this one is wrong
-            return (
-              house.dateRequiredByPersonnel &&
-              isWithinInterval(
-                house.dateRequiredByPersonnel,
-                monthStartEndInterval
-              )
-            );
-          });
-          return (
-            Math.round(
-              (unitsReceivedFromMaintenance.length /
-                unitsRequiredByHousing.length) *
-                10
-            ) * 10
-          );
-        })(),
         unitsCompletedPercentage: (() => {
           const unitsCompleted = processingDays.filter(
             (house) =>
