@@ -8,17 +8,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { endOfMonth, format, startOfMonth } from "date-fns";
+import { endOfMonth, format, startOfMonth, subMonths } from "date-fns";
 
 interface MonthIntervalSelectorProps {
-  startMonth: Date;
-  endMonth: Date;
   onValueChange: (startMonth: Date, endMonth: Date) => Promise<void> | void;
 }
 
 const MonthIntervalSelector: React.FC<MonthIntervalSelectorProps> = ({
-  startMonth,
-  endMonth,
   onValueChange,
 }) => {
   const [selectedStartMonth, setSelectedStartMonth] = React.useState(
@@ -27,6 +23,9 @@ const MonthIntervalSelector: React.FC<MonthIntervalSelectorProps> = ({
   const [selectedEndMonth, setSelectedEndMonth] = React.useState(
     endOfMonth(new Date())
   );
+
+  const startMonthRange = startOfMonth(new Date("2023-01-01"));
+  const endMonthRange = endOfMonth(new Date());
 
   const handleStartMonthChange = async (value: string) => {
     const monthStart = startOfMonth(new Date(value));
@@ -45,20 +44,30 @@ const MonthIntervalSelector: React.FC<MonthIntervalSelectorProps> = ({
       <div className="flex flex-col gap-2 w-full">
         Start Month
         <Select
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
+          defaultValue={format(
+            startOfMonth(subMonths(new Date(), 6)),
+            "MMM-yyyy"
+          )} // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onValueChange={async (value) => await handleStartMonthChange(value)}>
           <SelectTrigger className="w-full">
-            <SelectValue placeholder={format(startMonth, "MMM-yyyy")} />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Start Month</SelectLabel>
               {/* cycle through all months from end month back to jan using date-fns lib */}
               {Array.from(
-                { length: endMonth.getMonth() - startMonth.getMonth() + 1 },
+                {
+                  length:
+                    endMonthRange.getMonth() - startMonthRange.getMonth() + 1,
+                },
                 (_, i) => {
                   const date = endOfMonth(
-                    new Date(endMonth.getFullYear(), endMonth.getMonth() - i, 1)
+                    new Date(
+                      endMonthRange.getFullYear(),
+                      endMonthRange.getMonth() - i,
+                      1
+                    )
                   );
                   const dateStr = format(date, "MMM-yyyy");
                   return (
@@ -78,20 +87,28 @@ const MonthIntervalSelector: React.FC<MonthIntervalSelectorProps> = ({
       <div className="flex flex-col gap-2 w-full">
         End Month
         <Select
+          defaultValue={format(endOfMonth(new Date()), "MMM-yyyy")}
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onValueChange={async (value) => await handleEndMonthChange(value)}>
           <SelectTrigger className="w-full">
-            <SelectValue placeholder={format(endMonth, "MMM-yyyy")} />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               <SelectLabel>End Month</SelectLabel>
               {/* cycle through all months from end month back to jan using date-fns lib */}
               {Array.from(
-                { length: endMonth.getMonth() - startMonth.getMonth() + 1 },
+                {
+                  length:
+                    endMonthRange.getMonth() - startMonthRange.getMonth() + 1,
+                },
                 (_, i) => {
                   const date = endOfMonth(
-                    new Date(endMonth.getFullYear(), endMonth.getMonth() - i, 1)
+                    new Date(
+                      endMonthRange.getFullYear(),
+                      endMonthRange.getMonth() - i,
+                      1
+                    )
                   );
                   const dateStr = format(date, "MMM-yyyy");
                   return (
