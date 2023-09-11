@@ -102,7 +102,6 @@ export const processDays = ({
   // #18 "Avg Total Days Houses Received Maintenance", (check)
   // #19 "Avg Total late Days Houses Received from maintenance", (avg of units received from maintenance for that month)
   // #20 "Avg Total Days to Prepare a House", (avg of (units submitted to committee?) units completed by gardening for that month)
-  console.log("processingDays");
   const months =
     // given a start and end month, get all the months in between
     eachMonthOfInterval({
