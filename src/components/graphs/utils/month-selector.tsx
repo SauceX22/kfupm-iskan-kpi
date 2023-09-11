@@ -18,7 +18,7 @@ const MonthIntervalSelector: React.FC<MonthIntervalSelectorProps> = ({
   onValueChange,
 }) => {
   const [selectedStartMonth, setSelectedStartMonth] = React.useState(
-    startOfMonth(new Date("2023-01-01"))
+    startOfMonth(subMonths(new Date(), 6))
   );
   const [selectedEndMonth, setSelectedEndMonth] = React.useState(
     endOfMonth(new Date())
@@ -44,10 +44,7 @@ const MonthIntervalSelector: React.FC<MonthIntervalSelectorProps> = ({
       <div className="flex flex-col gap-2 w-full">
         Start Month
         <Select
-          defaultValue={format(
-            startOfMonth(subMonths(new Date(), 6)),
-            "MMM-yyyy"
-          )} // eslint-disable-next-line @typescript-eslint/no-misused-promises
+          defaultValue={format(selectedStartMonth, "MMM-yyyy")} // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onValueChange={async (value) => await handleStartMonthChange(value)}>
           <SelectTrigger className="w-full">
             <SelectValue />
@@ -87,7 +84,7 @@ const MonthIntervalSelector: React.FC<MonthIntervalSelectorProps> = ({
       <div className="flex flex-col gap-2 w-full">
         End Month
         <Select
-          defaultValue={format(endOfMonth(new Date()), "MMM-yyyy")}
+          defaultValue={format(selectedEndMonth, "MMM-yyyy")}
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onValueChange={async (value) => await handleEndMonthChange(value)}>
           <SelectTrigger className="w-full">
