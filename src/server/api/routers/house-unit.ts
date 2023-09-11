@@ -51,6 +51,8 @@ export const houseRouter = createTRPCRouter({
       z.object({
         limit: z.number().optional(),
         skip: z.number().optional(),
+        startMonth: z.date().optional(),
+        endMonth: z.date().optional(),
       })
     )
     .query(async ({ input, ctx }) => {
@@ -58,7 +60,11 @@ export const houseRouter = createTRPCRouter({
         take: input.limit,
         skip: input.skip,
       });
-      return processDays({ houses: allUnits });
+      return processDays({
+        houses: allUnits,
+        startMonth: input.startMonth,
+        endMonth: input.endMonth,
+      });
     }),
   getProductivityStats: publicProcedure
     .input(
