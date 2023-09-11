@@ -3,7 +3,7 @@ import MonthIntervalSelector from "~/components/graphs/utils/month-selector";
 import { Button } from "~/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { api } from "~/utils/api";
-import { endOfMonth, format, startOfMonth } from "date-fns";
+import { endOfMonth, format, startOfMonth, subMonths } from "date-fns";
 import { Loader2, RefreshCwIcon } from "lucide-react";
 import {
   CartesianGrid,
@@ -22,7 +22,7 @@ type ProductivityGraphProps = {
 const ProductivityGraph = ({}: ProductivityGraphProps) => {
   // jan 2023 as default start month (because it's the earliest month with the data we have)
   const [startMonth, setStartMonth] = useState(
-    startOfMonth(new Date("2023-01-01"))
+    startOfMonth(subMonths(new Date(), 6))
   );
   // inclusive of the end month
   const [endMonth, setEndMonth] = useState(endOfMonth(new Date()));
@@ -85,8 +85,6 @@ const ProductivityGraph = ({}: ProductivityGraphProps) => {
       <CardFooter className="w-full flex flex-col gap-4">
         {/* This component deals with (start as startOfMonth) and (end as endOfMonth) to ensure full interval */}
         <MonthIntervalSelector
-          startMonth={startOfMonth(new Date("2023-01-01"))}
-          endMonth={endOfMonth(new Date())}
           onValueChange={async (startMonth, endMonth) =>
             // eslint-disable-next-line @typescript-eslint/await-thenable
             await handleIntervalChange(startMonth, endMonth)
