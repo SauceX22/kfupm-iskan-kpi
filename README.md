@@ -1,7 +1,5 @@
 # KFUPM Housing Services KPI Tracker :house_with_garden: :bar_chart:
 
-:construction: **_Disclaimer: This project is currently under development._** :construction:
-
 Welcome to the GitHub repository for the KFUPM Housing Services KPI Tracker. This application is designed to calculate Key Performance Indicators (KPIs) and track housing units for the Housing Services Department at King Fahd University of Petroleum and Minerals (KFUPM).
 
 ## Project Overview :open_book:
