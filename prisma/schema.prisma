@@ -2,18 +2,16 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["jsonProtocol"]
+    provider = "prisma-client-js"
 }
 
 datasource db {
-    provider     = "mysql"
+    provider = "postgresql"
     // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
     // Further reading:
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
     // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url          = env("DATABASE_URL")
-    relationMode = "prisma"
+    url      = env("DATABASE_URL")
 }
 
 model Example {
@@ -70,19 +68,30 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
+enum HouseSatisfactionStatus {
+    NONE
+    SATISFIED
+    PARTIALLY_SATISFIED
+    UNSATISFIED
+}
+
 enum HouseSubmissionStatus {
+    NOT_STARTED
+    PENDING_MAINTENANCE_COMPLETION
+    PENDING_CLEANING_SUBMISSION
+    PENDING_CLEANING_COMPLETION
+    PENDING_FURNISHING_SUBMISSION
+    PENDING_FURNISHING_COMPLETION
+    PENDING_GARDENING_SUBMISSION
+    PENDING_GARDENING_COMPLETION
+    PENDING_FINAL_INSPECTION
+    PENDING_TENANT_ASSIGNMENT
     EARLY_SUBMISSION
     DONE_ON_TARGET
     LATE_SUBMISSION
-    PENDING_MAINTENANCE
-    PENDING_CLEANING
-    PENDING_FURNISHING
-    PENDING_GARDENING
-    PENDING_FINAL_INSPECTION
-    PENDING_TENANT_ASSIGNMENT
 }
 
-model HouseUnitStatus {
+model HouseUnit {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -90,15 +99,14 @@ model HouseUnitStatus {
     unitNumber Int     @unique
     court      String
     bedrooms   Int
-    extended   Boolean
-    area       Float
+    extended   Boolean @default(false)
+    area       Float   @default(0)
 
     // Maintenance
     dateSubmittedToMaintenance       DateTime?
     dateReceivedByMaintenance        DateTime?
     dateReceivedFromMaintenance      DateTime?
     dateRequiredByPersonnel          DateTime? /// From Maintenance Dept.
-    // TODO dateExpectedMaintenanceCompletion DateTime? maybee??
     // Cleaning
     dateSubmittedToCleaning          DateTime?
     dateExpectedCleaningCompletion   DateTime?
@@ -112,21 +120,12 @@ model HouseUnitStatus {
     dateExpectedGardeningCompletion  DateTime?
     dateCompletedGardening           DateTime?
     // Tenant (instructor)
-    // TODO: is the date of final inspection the same as the date of tenant assignment?
-    dateCheckedAndSubmitedToTenant   DateTime?
-    dateTenantSurveyFilled           DateTime?
-
-    // Days
-    daysToCompleteCleaning    Int?
-    daysToCompleteFurnishing  Int?
-    daysToCompleteGardening   Int?
-    totalDaysToCompleteAll    Int?
-    totalDaysToSubmitToTenant Int?
-    daysLaterThanPlanned      Int?
-
+    dateSubmitedToCommittee          DateTime?
     // Status
-    houseSubmissionStatus HouseSubmissionStatus @default(PENDING_MAINTENANCE)
-    comments              String?
+    submissionStatus                 HouseSubmissionStatus   @default(NOT_STARTED)
+    satisfactionStatus               HouseSatisfactionStatus @default(NONE)
+    comment                          String?
+
     // Flow: Maintenance -> Cleaning -> Furnishing -> Gardening -> Tenant Assignment
 }
 
